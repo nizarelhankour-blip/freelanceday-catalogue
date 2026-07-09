@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>FreelanceDay — Le Catalogue des experts IT</title>
+<style>
+  :root{
+    --teal:#17b3a6; --teal2:#0e9bd6; --tealdeep:#0e8c82;
+    --ink:#141922; --soft:#5b6472; --paper:#f3fbfa; --panel:#fff;
+    --line:rgba(20,25,34,.10);
+    --shadow:0 24px 70px rgba(10,60,60,.16);
+    --font:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    --teal-fd:#2ec4b6;
+    --grad:linear-gradient(90deg,#17b3a6,#0e9bd6);
+    --acc:#17b3a6;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; height:100%; }
+  body{
+    font-family:var(--font); color:var(--ink); overflow-x:hidden; -webkit-font-smoothing:antialiased;
+    background:
+      radial-gradient(1000px 620px at 8% -10%, rgba(23,179,166,.12) 0%, transparent 55%),
+      radial-gradient(950px 640px at 104% 2%, rgba(14,155,214,.10) 0%, transparent 54%),
+      radial-gradient(900px 700px at 50% 122%, rgba(23,179,166,.08) 0%, transparent 60%),
+      var(--paper);
+  }
+  button{ font-family:inherit; cursor:pointer; border:none; }
+
+  .amb{ position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+  .orb{ position:absolute; border-radius:50%; filter:blur(52px); opacity:.42; animation:drift 20s ease-in-out infinite; }
+  .orb.a{ width:360px;height:360px; background:radial-gradient(circle,#4fd9c9,transparent 66%); top:-80px; left:-60px;}
+  .orb.b{ width:320px;height:320px; background:radial-gradient(circle,#57b8f0,transparent 66%); bottom:-90px; right:-50px; animation-delay:-7s;}
+  .orb.c{ width:280px;height:280px; background:radial-gradient(circle,#7fe0d3,transparent 68%); top:44%; left:58%; opacity:.3; animation-delay:-11s;}
+  @keyframes drift{ 0%,100%{ transform:translate(0,0) scale(1);} 50%{ transform:translate(34px,-26px) scale(1.08);} }
+
+  .wrap{ position:relative; z-index:1; max-width:1140px; margin:0 auto; padding:22px 20px 80px; }
+  .rainbow-rule{ height:4px; border-radius:100px; background:var(--grad); }
+
+  /* logo */
+  .topbar{ display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .lockup{ display:flex; align-items:center; gap:14px; }
+  .fd{ display:flex; align-items:center; gap:9px; }
+  .fd .leaf{ width:26px;height:26px; margin-top:-8px; }
+  .fd .word{ line-height:1; font-size:22px; font-weight:800; letter-spacing:-.4px; }
+  .fd .word b{ color:#2b3038; font-weight:800; }
+  .fd .word i{ font-style:normal; color:var(--teal-fd); }
+  .cross{ color:var(--soft); font-weight:300; font-size:18px; opacity:.5; }
+  .kicker{ font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--teal);
+    background:rgba(23,179,166,.09); border:1px solid rgba(23,179,166,.2); padding:6px 11px; border-radius:100px; }
+  .forwho{ font-size:11.5px; color:var(--soft); text-align:right; }
+  .forwho b{ color:var(--ink); display:block; font-size:13px; }
+
+  .prog{ display:flex; gap:7px; justify-content:center; margin:20px 0 6px; }
+  .prog i{ width:26px;height:5px;border-radius:100px; background:var(--line); transition:.5s; }
+  .prog i.on{ background:var(--grad); width:40px; }
+
+  .screen{ display:none; }
+  .screen.active{ display:block; animation:fade .55s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes fade{ from{ opacity:0; transform:translateY(16px);} to{ opacity:1; transform:none;} }
+
+  .eyebrow{ display:inline-flex; align-items:center; gap:9px; font-size:12px; font-weight:700; letter-spacing:2px;
+    text-transform:uppercase; color:var(--teal); background:rgba(23,179,166,.08); padding:8px 15px; border-radius:100px; border:1px solid rgba(23,179,166,.16); }
+  .eyebrow .pulse{ width:8px;height:8px;border-radius:50%; background:var(--teal); animation:pulse 2s infinite; }
+  @keyframes pulse{ 0%{ box-shadow:0 0 0 0 rgba(23,179,166,.5);} 70%{ box-shadow:0 0 0 11px rgba(23,179,166,0);} 100%{ box-shadow:0 0 0 0 rgba(23,179,166,0);} }
+  .sec-head{ text-align:center; margin:5vh auto 30px; max-width:660px; padding:0 10px; }
+  .sec-head h2{ font-size:clamp(28px,5vw,46px); line-height:1.05; letter-spacing:-1px; margin:20px 0 12px; }
+  .sec-head h2 .hl{ background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .sec-head p{ color:var(--soft); font-size:clamp(15px,2.2vw,17px); line-height:1.55; margin:0; }
+  .sec-head p b{ color:var(--ink); }
+  .nav-row{ display:flex; justify-content:center; gap:12px; margin-top:34px; flex-wrap:wrap; }
+
+  .feats{ display:grid; gap:16px; }
+  .feats.three{ grid-template-columns:repeat(3,1fr); }
+  .feats.four{ grid-template-columns:repeat(4,1fr); }
+  @media(max-width:860px){ .feats.three,.feats.four{ grid-template-columns:repeat(2,1fr); } }
+  @media(max-width:520px){ .feats.three,.feats.four{ grid-template-columns:1fr; } }
+  .feat{ position:relative; background:#fff; border:1px solid var(--line); border-radius:20px;
+    padding:22px 20px; box-shadow:0 12px 34px rgba(10,60,60,.08); overflow:hidden; transition:transform .28s, box-shadow .3s, border-color .3s;
+    animation:cin .55s both; }
+  .feat:nth-child(1){animation-delay:.05s}.feat:nth-child(2){animation-delay:.12s}.feat:nth-child(3){animation-delay:.19s}.feat:nth-child(4){animation-delay:.26s}
+  .feat:hover{ transform:translateY(-6px); box-shadow:0 26px 56px rgba(23,179,166,.16); border-color:rgba(23,179,166,.4); }
+  .feat::before{ content:""; position:absolute; top:0;left:0;right:0; height:4px; background:linear-gradient(90deg,var(--teal),var(--teal2)); }
+  .feat.blue::before{ background:linear-gradient(90deg,var(--teal2),var(--teal)); }
+  .feat .ic{ width:46px;height:46px; border-radius:13px; display:grid; place-items:center; color:#fff; margin-bottom:14px;
+    background:linear-gradient(135deg,var(--teal),var(--teal2)); box-shadow:0 10px 24px rgba(23,179,166,.3); }
+  .feat.blue .ic{ background:linear-gradient(135deg,var(--teal2),var(--teal)); }
+  .feat .ic svg{ width:24px;height:24px; }
+  .feat h3{ margin:0 0 7px; font-size:16px; letter-spacing:-.2px; }
+  .feat p{ margin:0; font-size:13.5px; color:var(--soft); line-height:1.55; }
+  .feat .kpi{ margin-top:12px; font-size:12px; font-weight:800; color:var(--teal); letter-spacing:.3px; }
+  .resolve{ text-align:center; margin:26px auto 0; font-size:15px; color:var(--ink); }
+  .resolve b{ color:var(--teal); }
+
+  .hero{ position:relative; margin-top:6vh; text-align:center; padding:20px; }
+  .hero h1{ font-size:clamp(36px,7vw,62px); line-height:1.03; letter-spacing:-1.2px; margin:22px 0 14px; }
+  .hero h1 .hl{ background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero p{ color:var(--soft); font-size:clamp(15px,2.2vw,18px); max-width:520px; margin:0 auto 30px; line-height:1.55; }
+  .hero p b{ color:var(--ink); }
+
+  .btn{ font-weight:700; border-radius:14px; transition:transform .18s cubic-bezier(.2,.9,.3,1.3), box-shadow .25s, filter .2s; }
+  .btn:active{ transform:translateY(1px) scale(.99); }
+  .btn-primary{ background:linear-gradient(135deg,var(--teal),var(--teal2)); color:#fff; font-size:16px; padding:16px 30px;
+    box-shadow:0 14px 40px rgba(23,179,166,.34); display:inline-flex; align-items:center; gap:12px; }
+  .btn-primary:hover{ transform:translateY(-3px); box-shadow:0 22px 58px rgba(23,179,166,.46); }
+  .btn-primary .ar{ transition:transform .25s; } .btn-primary:hover .ar{ transform:translateX(5px); }
+  .btn-ghost{ background:#fff; color:var(--ink); border:1px solid var(--line); padding:15px 24px; font-size:15px; }
+  .btn-ghost:hover{ border-color:var(--teal); color:var(--teal); transform:translateY(-3px); }
+
+  .hero-cards{ display:flex; gap:10px; justify-content:center; margin:38px auto 0; max-width:640px; flex-wrap:wrap; }
+  .mini{ width:58px;height:74px; border-radius:12px; background:#fff; border:1px solid var(--line);
+    display:grid; place-items:center; color:#a9bdba; box-shadow:0 8px 20px rgba(10,60,60,.08); animation:rise .7s both; cursor:pointer;
+    transition:transform .3s, box-shadow .3s, color .3s; }
+  .mini:hover{ transform:translateY(-8px) rotate(-3deg); box-shadow:0 18px 36px rgba(23,179,166,.2); color:var(--teal);}
+  .mini svg{ width:26px;height:26px; }
+  .mini:nth-child(1){animation-delay:.05s}.mini:nth-child(2){animation-delay:.1s}.mini:nth-child(3){animation-delay:.15s}
+  .mini:nth-child(4){animation-delay:.2s}.mini:nth-child(5){animation-delay:.25s}.mini:nth-child(6){animation-delay:.3s}
+  .mini:nth-child(7){animation-delay:.35s}.mini:nth-child(8){animation-delay:.4s}
+  @keyframes rise{ from{ opacity:0; transform:translateY(20px);} to{ opacity:1; transform:none;} }
+
+  .rhead{ text-align:center; margin:10px 0 26px; }
+  .rhead h2{ font-size:clamp(24px,4vw,36px); margin:0 0 8px; letter-spacing:-.5px; }
+  .rhead h2 span{ background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .rhead p{ color:var(--soft); font-size:14px; margin:0 auto; max-width:580px; }
+
+  .grid{ display:grid; grid-template-columns:repeat(6,1fr); gap:16px; perspective:1200px; }
+  .card{ grid-column:span 2; position:relative; border-radius:20px; padding:16px; cursor:pointer; overflow:hidden;
+    background:#fff; border:1px solid var(--line);
+    box-shadow:0 10px 30px rgba(10,60,60,.08); transition:transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .3s, border-color .3s;
+    transform-style:preserve-3d; animation:cin .55s both; }
+  .card:nth-child(7){ grid-column:span 2; }
+  .card:nth-child(8){ grid-column:span 2; }
+  @media(max-width:860px){ .grid{ grid-template-columns:repeat(2,1fr); } .card, .card:nth-child(7), .card:nth-child(8){ grid-column:auto; } }
+  @media(max-width:480px){ .grid{ grid-template-columns:1fr; } }
+  .card:nth-child(1){animation-delay:.04s}.card:nth-child(2){animation-delay:.09s}.card:nth-child(3){animation-delay:.14s}
+  .card:nth-child(4){animation-delay:.19s}.card:nth-child(5){animation-delay:.24s}.card:nth-child(6){animation-delay:.29s}
+  .card:nth-child(7){animation-delay:.34s}.card:nth-child(8){animation-delay:.39s}.card:nth-child(9){animation-delay:.44s}
+  @keyframes cin{ from{ opacity:0; transform:translateY(22px);} to{ opacity:1; transform:none;} }
+  .card:hover{ box-shadow:0 28px 64px rgba(10,60,60,.18); border-color:color-mix(in srgb, var(--acc) 55%, transparent); }
+  .card::before{ content:""; position:absolute; top:0;left:0;right:0; height:4px; background:linear-gradient(90deg,var(--acc),transparent); }
+  .glow{ position:absolute; inset:0; opacity:0; transition:opacity .3s; pointer-events:none;
+    background:radial-gradient(240px 240px at var(--mx,50%) var(--my,30%), color-mix(in srgb,var(--acc) 22%, transparent), transparent 60%);}
+  .card:hover .glow{ opacity:1; }
+  .num{ position:absolute; top:12px; right:13px; z-index:4; font-size:11px; font-weight:800; letter-spacing:1px; color:var(--acc);
+    background:color-mix(in srgb,var(--acc) 12%, #fff); padding:4px 8px; border-radius:100px; }
+
+  .stage{ width:100%; aspect-ratio:1/0.6; border-radius:15px; position:relative; overflow:hidden; margin-bottom:13px;
+    background:radial-gradient(120% 90% at 50% 120%, color-mix(in srgb,var(--acc) 34%, #0c1c22) 0%, #0a1418 72%); }
+  .beam{ position:absolute; top:-6%; left:50%; width:60%; height:120%; transform:translateX(-50%);
+    background:linear-gradient(180deg, color-mix(in srgb,var(--acc) 60%, #fff) 0%, transparent 68%);
+    clip-path:polygon(38% 0,62% 0,100% 100%,0 100%); opacity:.5; mix-blend-mode:screen; transition:opacity .3s; }
+  .card:hover .beam{ opacity:.9; animation:flick 2.4s ease-in-out infinite; }
+  @keyframes flick{ 0%,100%{ opacity:.72;} 50%{ opacity:.98;} }
+  .card-icon{ position:absolute; inset:0; display:grid; place-items:center; color:#fff; z-index:2; transition:transform .35s; }
+  .card-icon svg{ width:50px;height:50px; filter:drop-shadow(0 8px 16px rgba(0,0,0,.45)); }
+  .card:hover .card-icon{ transform:translateY(-3px) scale(1.06); }
+  .card-floor{ position:absolute; left:50%; bottom:12%; width:52%; height:10%; transform:translateX(-50%);
+    background:radial-gradient(closest-side, color-mix(in srgb,var(--acc) 70%, #fff), transparent); opacity:.55; border-radius:50%; }
+  .tjm-chip{ position:absolute; top:10px; left:10px; z-index:3; font-size:10.5px; font-weight:800; color:#fff;
+    background:linear-gradient(135deg,var(--teal),var(--teal2)); padding:4px 9px; border-radius:100px; box-shadow:0 6px 16px rgba(23,179,166,.34); }
+  .tagchip{ position:absolute; bottom:9px; left:10px; z-index:3; display:flex; align-items:center; gap:6px; font-size:10px; font-weight:700;
+    color:#fff; background:rgba(255,255,255,.16); padding:5px 9px; border-radius:100px; backdrop-filter:blur(4px); }
+  .card h3{ margin:2px 0 8px; font-size:14.5px; line-height:1.25; min-height:36px; }
+  .card .chips{ display:flex; flex-wrap:wrap; gap:5px; margin-bottom:11px; }
+  .card .chips .chip{ font-size:10.5px; padding:4px 8px; }
+  .enter-hint{ margin-top:2px; font-size:11.5px; font-weight:700; color:var(--acc); display:flex; align-items:center; gap:6px; }
+
+  .cbar{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; flex-wrap:wrap; }
+  .back{ background:#fff; border:1px solid var(--line); border-radius:12px; padding:10px 16px; font-size:13px; font-weight:700;
+    color:var(--ink); display:inline-flex; align-items:center; gap:8px; transition:.2s; }
+  .back:hover{ border-color:var(--teal); color:var(--teal); transform:translateX(-3px); }
+  .ptrack{ font-size:12px; color:var(--soft); font-weight:700; letter-spacing:1px; }
+  .ptrack b{ color:var(--acc); font-size:15px; }
+  .arrows{ display:flex; gap:8px; }
+  .arrows button{ width:42px;height:42px; border-radius:12px; background:#fff; border:1px solid var(--line);
+    display:grid; place-items:center; color:var(--ink); transition:.2s; }
+  .arrows button:hover{ background:var(--acc); color:#fff; border-color:transparent; transform:translateY(-2px); }
+  .arrows svg{ width:18px;height:18px; }
+
+  .cgrid{ display:grid; grid-template-columns:minmax(0,.92fr) minmax(0,1.15fr); gap:20px; align-items:start; }
+  @media(max-width:820px){ .cgrid{ grid-template-columns:1fr; } }
+
+  .spot{ position:relative; border-radius:24px; overflow:hidden; min-height:420px; border:1px solid rgba(255,255,255,.08);
+    background:radial-gradient(120% 90% at 50% 120%, color-mix(in srgb,var(--acc) 34%,#0c1c22) 0%, #0a1418 72%);
+    box-shadow:var(--shadow); display:grid; place-items:center; position:sticky; top:16px; }
+  @media(max-width:820px){ .spot{ position:relative; top:0; } }
+  .spot .rays{ position:absolute; top:-10%; left:50%; width:72%; height:120%; transform:translateX(-50%);
+    background:linear-gradient(180deg, color-mix(in srgb,var(--acc) 65%,#fff) 0%, transparent 66%);
+    clip-path:polygon(40% 0,60% 0,100% 100%,0 100%); opacity:.55; mix-blend-mode:screen; animation:sway 6s ease-in-out infinite; }
+  @keyframes sway{ 0%,100%{ transform:translateX(-50%) rotate(-2deg);} 50%{ transform:translateX(-50%) rotate(2deg);} }
+  .spot .dust{ position:absolute; inset:0; background-image:
+      radial-gradient(2px 2px at 30% 40%, rgba(255,255,255,.5), transparent),
+      radial-gradient(2px 2px at 60% 60%, rgba(255,255,255,.38), transparent),
+      radial-gradient(1.5px 1.5px at 45% 30%, rgba(255,255,255,.4), transparent),
+      radial-gradient(1.5px 1.5px at 70% 45%, rgba(255,255,255,.3), transparent);
+    animation:twinkle 4s ease-in-out infinite; }
+  @keyframes twinkle{ 0%,100%{ opacity:.4;} 50%{ opacity:.9;} }
+  .hero-icon{ position:relative; z-index:2; width:130px; height:130px; color:#fff; display:grid; place-items:center;
+    filter:drop-shadow(0 16px 30px rgba(0,0,0,.5)); animation:float 5s ease-in-out infinite; }
+  @keyframes float{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-10px);} }
+  .hero-icon svg{ width:104px;height:104px; }
+  .hero-floor{ position:absolute; bottom:20%; left:50%; width:44%; height:7%; transform:translateX(-50%); z-index:1;
+    background:radial-gradient(closest-side, color-mix(in srgb,var(--acc) 70%,#fff), transparent); opacity:.6; border-radius:50%; }
+  .spot .tag{ position:absolute; top:16px; left:16px; z-index:3; display:flex; align-items:center; gap:7px;
+    font-size:11px; font-weight:700; color:#fff; background:rgba(255,255,255,.13); padding:6px 11px; border-radius:100px; backdrop-filter:blur(6px);}
+  .spot .tag svg{ width:12px;height:12px; }
+  .tjm-badge{ position:absolute; top:16px; right:16px; z-index:3; font-size:12.5px; font-weight:800; color:#fff;
+    background:linear-gradient(135deg,var(--teal),var(--teal2)); padding:8px 13px; border-radius:100px; box-shadow:0 8px 20px rgba(23,179,166,.4); }
+  .spot-role{ position:absolute; bottom:18px; left:16px; right:16px; text-align:center; z-index:3; color:#fff; }
+  .spot-role b{ font-size:18px; font-weight:800; line-height:1.22; display:block; text-shadow:0 3px 14px rgba(0,0,0,.45); }
+  .spot-role span{ display:block; font-size:10px; letter-spacing:1.4px; text-transform:uppercase; color:rgba(255,255,255,.6); margin-top:8px; }
+
+  .panel{ background:var(--panel); border:1px solid var(--line); border-radius:20px; padding:20px; box-shadow:0 14px 40px rgba(10,60,60,.08); }
+  .panel + .panel{ margin-top:16px; }
+  .panel .lbl{ font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--soft); font-weight:700; margin-bottom:14px; display:flex; align-items:center; gap:8px;}
+  .panel .lbl .d{ width:7px;height:7px;border-radius:50%; background:var(--acc); }
+  .missions{ list-style:none; margin:0; padding:0; display:grid; gap:10px; }
+  .missions li{ display:flex; gap:11px; font-size:13.5px; color:var(--soft); line-height:1.5; }
+  .missions .ck{ flex:0 0 auto; width:21px;height:21px;border-radius:7px; display:grid; place-items:center; margin-top:1px;
+    background:color-mix(in srgb,var(--acc) 14%,#fff); color:var(--acc); }
+  .missions .ck svg{ width:12px;height:12px; }
+  .skillcat{ margin-bottom:13px; } .skillcat:last-child{ margin-bottom:0; }
+  .skillcat .sk-k{ font-size:11px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; color:var(--acc); display:block; margin-bottom:8px; }
+  .chips{ display:flex; flex-wrap:wrap; gap:6px; }
+  .chip{ font-size:11.5px; font-weight:600; color:var(--ink); background:#eef7f6; border:1px solid var(--line); padding:5px 10px; border-radius:100px; }
+  .xp{ margin:0; font-size:13.5px; color:var(--soft); line-height:1.62; }
+  .fit{ background:linear-gradient(135deg, color-mix(in srgb,var(--acc) 10%,#fff), #fff); border:1px solid color-mix(in srgb,var(--acc) 32%,var(--line)); }
+  .fit .lbl .d{ background:var(--acc); }
+  .fit p{ margin:0; font-size:13.5px; color:var(--soft); line-height:1.55; }
+  .fit p b{ color:var(--ink); }
+  .cta-mini{ margin-top:16px; display:flex; gap:10px; flex-wrap:wrap; }
+
+  .close{ text-align:center; margin-top:2vh; }
+  .seal-big{ width:78px;height:78px; margin:0 auto 18px; border-radius:22px; background:linear-gradient(135deg,var(--teal),var(--teal2));
+    display:grid; place-items:center; box-shadow:0 16px 40px rgba(23,179,166,.4); animation:pop .6s cubic-bezier(.2,1.4,.4,1) both;}
+  @keyframes pop{ from{ transform:scale(.4); opacity:0;} to{ transform:none; opacity:1;} }
+  .seal-big svg{ width:36px;height:36px; color:#fff; }
+  .close h2{ font-size:clamp(24px,4.4vw,38px); margin:0 auto 12px; letter-spacing:-.5px; max-width:680px; }
+  .close p{ color:var(--soft); max-width:520px; margin:0 auto 26px; line-height:1.55; font-size:15px; }
+  .slots{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; max-width:560px; margin:0 auto 24px; }
+  .slot{ background:#fff; border:1px solid var(--line); border-radius:16px; padding:16px; text-align:left; transition:.25s; cursor:pointer; }
+  .slot:hover{ border-color:var(--teal); transform:translateY(-5px); box-shadow:0 18px 40px rgba(23,179,166,.14); }
+  .slot .d{ font-size:11px; color:var(--teal); font-weight:800; text-transform:uppercase; letter-spacing:.6px; }
+  .slot .h{ font-size:18px; font-weight:800; margin:5px 0 2px; } .slot .m{ font-size:12px; color:var(--soft); }
+  a.btn{ text-decoration:none; }
+  .contact{ max-width:640px; margin:26px auto 0; display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  @media(max-width:640px){ .contact{ grid-template-columns:1fr; } }
+  .cbox{ background:#fff; border:1px solid var(--line); border-radius:16px; padding:15px 16px; text-align:left; }
+  .cbox .ct{ font-size:10px; font-weight:800; letter-spacing:1.2px; text-transform:uppercase; color:var(--teal); margin-bottom:6px; }
+  .cbox a, .cbox span{ display:block; font-size:13px; color:var(--ink); text-decoration:none; line-height:1.5; word-break:break-word; }
+  .cbox a:hover{ color:var(--teal); }
+  .cbox small{ color:var(--soft); font-size:11.5px; }
+  .foot{ text-align:center; margin-top:30px; color:var(--soft); font-size:12px; }
+  .foot b{ color:var(--teal); }
+
+  .toast{ position:fixed; left:50%; bottom:24px; transform:translate(-50%,140%); z-index:80; background:var(--ink); color:#fff;
+    padding:13px 18px; border-radius:14px; font-size:13.5px; font-weight:600; box-shadow:0 18px 50px rgba(0,0,0,.35);
+    display:flex; align-items:center; gap:11px; max-width:90vw; transition:transform .5s cubic-bezier(.2,1,.3,1); }
+  .toast.show{ transform:translate(-50%,0); }
+  .toast .tl{ width:28px;height:28px;border-radius:8px; background:rgba(255,255,255,.13); display:grid; place-items:center; flex:0 0 auto;}
+  .toast .tl svg{ width:15px;height:15px; }
+  .toast small{ display:block; font-weight:400; opacity:.72; font-size:11.5px; margin-top:2px; }
+
+  @media (prefers-reduced-motion:reduce){ *{ animation-duration:.001ms !important; } .spot .rays,.dust{ display:none; } }
+</style>
+</head>
+<body>
+<div class="amb"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div></div>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="lockup">
+      <div class="fd">
+        <svg class="leaf" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15C3 8.4 8.4 3 21 3c0 8.6-4.9 15-13.5 15-1.4 0-2.6-.1-2.4-.6C6 15 9 12 13 10.5 8 12 4.5 14 3 15Z" fill="#2ec4b6"/></svg>
+        <span class="word"><b>Freelance</b><i>Day</i></span>
+      </div>
+      <span class="cross">·</span>
+      <span class="kicker">Le Catalogue</span>
+    </div>
+    <div class="forwho">Experts IT<b>Prêts à démarrer</b></div>
+  </div>
+
+  <div class="prog" id="prog"><i class="on"></i><i></i><i></i><i></i></div>
+
+  <!-- WELCOME -->
+  <section class="screen active" id="s-welcome">
+    <div class="hero">
+      <span class="eyebrow"><span class="pulse"></span> Le catalogue FreelanceDay</span>
+      <h1>Pensez à vous.<br><span class="hl">On s'occupe du reste.</span></h1>
+      <p>Vos projets avancent, vos équipes montent en charge — trouver les bons profils tech, c'est notre métier. <b>Rencontrés, écoutés et validés</b> par nos soins, prêts à démarrer.</p>
+      <button class="btn btn-primary" onclick="show('problem')">Découvrir le catalogue <span class="ar">→</span></button>
+      <div class="hero-cards" id="heroCards"></div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="screen" id="s-problem">
+    <div class="sec-head">
+      <span class="eyebrow"><span class="pulse"></span> Le constat</span>
+      <h2>Les bons profils IT<br>partent <span class="hl">en 48h.</span></h2>
+      <p>Développeurs, DevOps, data, IA : les compétences les plus demandées sont <b>rares, chères, et longues à trouver.</b></p>
+    </div>
+    <div class="feats three">
+      <div class="feat">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        <h3>Recrutement trop lent</h3>
+        <p>Les process classiques prennent 4 à 8 semaines. Vos projets attendent.</p>
+        <div class="kpi">4 à 8 semaines perdues</div>
+      </div>
+      <div class="feat">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3"/></svg></div>
+        <h3>TJM qui s'envolent</h3>
+        <p>Les intermédiaires empilent les marges. Vous payez le prix fort.</p>
+        <div class="kpi">Jusqu'à +40 % de marge cachée</div>
+      </div>
+      <div class="feat">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
+        <h3>Qualité incertaine</h3>
+        <p>Trier les CV prend un temps fou, sans garantie sur le niveau réel.</p>
+        <div class="kpi">Profils non vérifiés</div>
+      </div>
+    </div>
+    <div class="resolve"><b>FreelanceDay</b> résout les trois.</div>
+    <div class="nav-row">
+      <button class="back" onclick="show('welcome')">← Retour</button>
+      <button class="btn btn-primary" onclick="show('solution')">Notre solution <span class="ar">→</span></button>
+    </div>
+  </section>
+
+  <!-- SOLUTION -->
+  <section class="screen" id="s-solution">
+    <div class="sec-head">
+      <span class="eyebrow">Notre solution</span>
+      <h2>Votre <span class="hl">partenaire unique</span><br>pour le talent IT.</h2>
+      <p>Une chaîne complète, du sourcing à la facturation — pensée pour la <b>vitesse</b>, le <b>juste prix</b> et le <b>zéro risque</b>.</p>
+    </div>
+    <div class="feats four">
+      <div class="feat">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></div>
+        <h3>Sourcing temps réel</h3>
+        <p>Un outil en IA générative développé sur mesure.</p>
+        <div class="kpi">+1M profils IT</div>
+      </div>
+      <div class="feat blue">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+        <h3>Sélection de qualité</h3>
+        <p>On ne prend que les meilleurs, sur les compétences techniques &amp; soft skills.</p>
+        <div class="kpi">2 candidats triés sur le volet</div>
+      </div>
+      <div class="feat">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+        <h3>Juste prix &amp; transparence</h3>
+        <p>Des tarifs justes, sans marges cachées. Le bon profil au bon niveau.</p>
+        <div class="kpi">Sans intermédiaire</div>
+      </div>
+      <div class="feat blue">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div>
+        <h3>Facturation simplifiée</h3>
+        <p>Un contrat, une facture. Quel que soit le statut du candidat.</p>
+        <div class="kpi">1 contrat · 1 facture</div>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button class="back" onclick="show('problem')">← Retour</button>
+      <button class="btn btn-primary" onclick="show('roster')">Voir le catalogue <span class="ar">→</span></button>
+    </div>
+  </section>
+
+  <!-- ROSTER -->
+  <section class="screen" id="s-roster">
+    <div class="rhead">
+      <h2>Neuf experts prêts à <span>démarrer</span></h2>
+      <p>Opérationnels immédiatement et vérifiés. Touchez un profil pour découvrir ses missions, compétences et TJM.</p>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div style="display:flex; justify-content:space-between; margin-top:26px; align-items:center; flex-wrap:wrap; gap:12px;">
+      <button class="back" onclick="show('solution')">← Retour</button>
+      <button class="btn btn-primary" onclick="show('closing')">Planifier un appel <span class="ar">→</span></button>
+    </div>
+  </section>
+
+  <!-- PROFILE -->
+  <section class="screen" id="s-profile">
+    <div class="cpage">
+      <div class="cbar">
+        <button class="back" onclick="show('roster')">← Tout le catalogue</button>
+        <div class="ptrack">PROFIL <b id="pnum">01</b> / 09</div>
+        <div class="arrows">
+          <button onclick="stepProfile(-1)" aria-label="Précédent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <button onclick="stepProfile(1)" aria-label="Suivant"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+        </div>
+      </div>
+      <div class="cgrid">
+        <div class="spot">
+          <div class="rays"></div><div class="dust"></div>
+          <div class="tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.5 6.5L21 9l-5 4 1.5 7L12 16l-5.5 4L8 13 3 9l6.5-.5z"/></svg> <span id="ptag">Expertise</span></div>
+          <div class="tjm-badge" id="ptjm">—</div>
+          <div class="hero-floor"></div>
+          <div class="hero-icon" id="picon"></div>
+          <div class="spot-role"><b id="prole">—</b><span>Profil vérifié · identité dévoilée à la mise en relation</span></div>
+        </div>
+        <div>
+          <div class="panel"><div class="lbl"><span class="d"></span> Missions clés</div><ul class="missions" id="missions"></ul></div>
+          <div class="panel"><div class="lbl"><span class="d"></span> Compétences techniques</div><div id="skills"></div></div>
+          <div class="panel"><div class="lbl"><span class="d"></span> Expérience</div><p class="xp" id="xp"></p></div>
+          <div class="panel fit">
+            <div class="lbl"><span class="d"></span> Pourquoi ce profil</div>
+            <p id="fit"></p>
+            <div class="cta-mini">
+              <button class="btn btn-primary" style="padding:12px 20px; font-size:14px;" onclick="show('closing')">Planifier un appel <span class="ar">→</span></button>
+              <button class="btn btn-ghost" style="padding:11px 18px; font-size:14px;" onclick="stepProfile(1)">Profil suivant →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLOSING -->
+  <section class="screen" id="s-closing">
+    <div class="close">
+      <div class="seal-big" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+      <h2>Le profil qu'il vous faut, cette semaine.</h2>
+      <p>Dites-nous ce qu'il vous manque — nous vous présentons les meilleurs candidats en direct.</p>
+      <div class="slots">
+        <div class="slot" onclick="toast('Créneau noté','Nous confirmerons par e-mail.')"><div class="d">Cette semaine</div><div class="h">Mar · 15:00</div><div class="m">Intro 30 min (CET)</div></div>
+        <div class="slot" onclick="toast('Créneau noté','Nous confirmerons par e-mail.')"><div class="d">Cette semaine</div><div class="h">Jeu · 10:30</div><div class="m">Intro 30 min (CET)</div></div>
+        <div class="slot" onclick="toast('Créneau noté','Nous confirmerons par e-mail.')"><div class="d">Flexible</div><div class="h">Votre horaire</div><div class="m">Proposez un créneau</div></div>
+      </div>
+      <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+        <a class="btn btn-primary" href="mailto:business@reesk.eu?subject=FreelanceDay%20—%20Catalogue%20profils%20IT%20—%20Planifier%20un%20appel&body=Bonjour%20FreelanceDay%2C%0A%0AJe%20souhaite%20planifier%20un%20appel%20et%20découvrir%20vos%20profils.%0A%0AMerci.">Planifier un appel <span class="ar">→</span></a>
+        <button class="btn btn-ghost" onclick="show('roster')">← Retour au catalogue</button>
+      </div>
+      <div class="contact">
+        <div class="cbox"><div class="ct">Contact</div><a href="mailto:business@reesk.eu">business@reesk.eu</a><span><small>+33 7 88 21 15 01</small></span><span><small>+33 7 88 06 05 48</small></span></div>
+        <div class="cbox"><div class="ct">Votre interlocuteur</div><span>Romain — <small>COO</small></span><a href="mailto:romain@freelanceday.io">romain@freelanceday.io</a><span><small>06 61 70 95 78</small></span></div>
+        <div class="cbox"><div class="ct">FreelanceDay</div><span><small>7 bureaux · Europe + Dubaï</small></span><a href="https://www.reesk.eu" target="_blank" rel="noopener">www.reesk.eu</a></div>
+      </div>
+      <div class="rainbow-rule" style="max-width:640px;margin:26px auto 0;"></div>
+      <div class="foot"><b>FreelanceDay</b> — le catalogue des experts IT prêts à démarrer.</div>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast">
+  <div class="tl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+  <div><span id="toast-t">Noté</span><small id="toast-s"></small></div>
+</div>
+
+<script>
+  const IC = {
+    code:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M13.5 6l-3 12"/></svg>',
+    devops:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 13.7-5.6L20 8"/><path d="M20 4v4h-4"/><path d="M20 12a8 8 0 0 1-13.7 5.6L4 16"/><path d="M4 20v-4h4"/></svg>',
+    pipeline:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="6" height="6" rx="1.5"/><rect x="15" y="14" width="6" height="6" rx="1.5"/><path d="M9 7h5a3 3 0 0 1 3 3v4"/></svg>',
+    chart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M9 20V4M14 20v-7M19 20V7"/><path d="M3 20h18"/></svg>',
+    bot:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 8V4M8 4h8"/><circle cx="9" cy="13" r="1.2" fill="currentColor"/><circle cx="15" cy="13" r="1.2" fill="currentColor"/></svg>',
+    shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 7.5 8 9 4.5-1.5 8-4 8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>',
+    cloud:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6-1.3A3.5 3.5 0 0 1 18 18z"/><path d="M9 15h6"/></svg>',
+    server:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="7" rx="1.5"/><rect x="3" y="13" width="18" height="7" rx="1.5"/><circle cx="7" cy="7.5" r="1" fill="currentColor"/><circle cx="7" cy="16.5" r="1" fill="currentColor"/></svg>',
+    sap:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5"/><path d="M12 12v10"/></svg>'
+  };
+  const downSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>';
+
+  const PROFILES = [
+    {
+      role:'Développeur Full-Stack (React / Node)', tjm:'590 €/jour', tag:'Full-Stack JS', acc:'#2b7fff', icon:IC.code,
+      missions:[
+        `Développement de fonctionnalités front-end et back-end.`,
+        `Conception d'interfaces réactives (React / Next.js).`,
+        `Développement d'APIs REST et de services Node.js.`,
+        `Tests, revue de code et bonnes pratiques.`,
+        `Intégration continue et déploiement (CI/CD).`,
+        `Collaboration en équipe agile.`
+      ],
+      skills:[
+        {k:'Frontend', v:'React, Next.js, TypeScript, Tailwind'},
+        {k:'Backend', v:'Node.js, Express, NestJS'},
+        {k:'Data', v:'PostgreSQL, MongoDB, Prisma'},
+        {k:'DevOps', v:'Docker, CI/CD, Git'},
+        {k:'Méthodes', v:'Agile, Scrum, Tests'}
+      ],
+      xp:`Développeur full-stack polyvalent, à l'aise du front au back. Expérience sur des applications web modernes en startup comme en grand compte, du prototype à la production.`,
+      fit:`Le profil le plus demandé du marché : opérationnel immédiatement et polyvalent, du front au back.`
+    },
+    {
+      role:'Ingénieur DevOps / SRE', tjm:'620 €/jour', tag:'DevOps / SRE', acc:'#7c5cff', icon:IC.devops,
+      missions:[
+        `Mise en place et maintien des pipelines CI/CD.`,
+        `Automatisation de l'infrastructure (IaC).`,
+        `Orchestration de conteneurs (Kubernetes).`,
+        `Supervision, alerting et fiabilité (SRE).`,
+        `Optimisation des coûts et de la performance.`,
+        `Sécurisation des chaînes de déploiement.`
+      ],
+      skills:[
+        {k:'Cloud', v:'AWS, Azure, GCP'},
+        {k:'Conteneurs', v:'Kubernetes, Docker, Helm'},
+        {k:'IaC', v:'Terraform, Ansible'},
+        {k:'CI/CD', v:'GitLab CI, GitHub Actions, ArgoCD'},
+        {k:'Observabilité', v:'Prometheus, Grafana, ELK'}
+      ],
+      xp:`Ingénieur DevOps / SRE spécialisé dans l'automatisation et la fiabilité des plateformes. Expérience dans l'industrialisation des déploiements et la réduction du time-to-market.`,
+      fit:`Profil en pénurie sur le marché : il accélère vos déploiements et fiabilise votre production.`
+    },
+    {
+      role:'Data Engineer', tjm:'620 €/jour', tag:'Data Engineering', acc:'#00a9ce', icon:IC.pipeline,
+      missions:[
+        `Construction de pipelines de données (ETL/ELT).`,
+        `Mise en place de data lakes et data warehouses.`,
+        `Traitement batch et temps réel (streaming).`,
+        `Fiabilisation de la qualité des données.`,
+        `Industrialisation et automatisation des flux.`,
+        `Support des équipes analytics et data science.`
+      ],
+      skills:[
+        {k:'Data', v:'Spark, dbt, Airflow, Kafka'},
+        {k:'Cloud', v:'Databricks, Snowflake, BigQuery'},
+        {k:'Langages', v:'Python, SQL, Scala'},
+        {k:'Infra', v:'Docker, Terraform'},
+        {k:'Qualité', v:'Great Expectations, Observabilité'}
+      ],
+      xp:`Data engineer spécialisé dans la construction de plateformes data fiables et scalables. Expérience sur des pipelines à forte volumétrie, socle de tout projet analytics ou IA.`,
+      fit:`Indispensable à tout projet data/IA : sans lui, pas de données exploitables. Le socle de tout le reste.`
+    },
+    {
+      role:'Data Scientist', tjm:'650 €/jour', tag:'Data Science / ML', acc:'#ff7a59', icon:IC.chart,
+      missions:[
+        `Développement de modèles de Machine Learning.`,
+        `Analyse exploratoire et feature engineering.`,
+        `Industrialisation des modèles (MLOps).`,
+        `Suivi des performances et amélioration continue.`,
+        `Construction de tableaux de bord décisionnels.`,
+        `Traduction des besoins métiers en valeur.`
+      ],
+      skills:[
+        {k:'ML', v:'Python, Scikit-Learn, XGBoost'},
+        {k:'Deep Learning', v:'PyTorch, TensorFlow'},
+        {k:'Data', v:'Pandas, SQL, Spark'},
+        {k:'MLOps', v:'MLflow, Docker, CI/CD'},
+        {k:'Viz', v:'Power BI, Matplotlib'}
+      ],
+      xp:`Data scientist orienté impact business, du prototype à la mise en production. Expérience sur des cas d'usage de prédiction, scoring et recommandation.`,
+      fit:`Très recherché : il transforme vos données en décisions concrètes et mesurables.`
+    },
+    {
+      role:'Ingénieur IA Générative / LLM', tjm:'680 €/jour', tag:'GenAI / LLM', acc:'#a855f7', icon:IC.bot,
+      missions:[
+        `Développement d'applications basées sur les LLM.`,
+        `Conception de solutions RAG et d'agents IA.`,
+        `Création de copilotes et assistants métiers.`,
+        `Industrialisation LLMOps et guardrails.`,
+        `Optimisation des coûts et de la qualité des réponses.`,
+        `Intégration aux applications existantes.`
+      ],
+      skills:[
+        {k:'IA Générative', v:'OpenAI, Mistral, LangChain, LangGraph'},
+        {k:'RAG', v:'pgvector, Qdrant, Recherche sémantique'},
+        {k:'Développement', v:'Python, FastAPI, API REST'},
+        {k:'LLMOps', v:'Guardrails, Évaluation LLM, Observabilité'},
+        {k:'Cloud', v:'Azure AI, Docker'}
+      ],
+      xp:`Ingénieur spécialisé dans l'IA générative et les architectures LLM. Expérience sur des assistants, de la recherche documentaire et de l'automatisation en production.`,
+      fit:`La compétence la plus recherchée de 2026 : rare, stratégique et immédiatement opérationnelle.`
+    },
+    {
+      role:'Expert Cybersécurité', tjm:'700 €/jour', tag:'Cybersécurité', acc:'#ef4444', icon:IC.shield,
+      missions:[
+        `Tests d'intrusion et audits de sécurité.`,
+        `Durcissement des systèmes et applications.`,
+        `Supervision cyber (SOC) et réponse à incident.`,
+        `Mise en conformité (ISO 27001, NIS2, RGPD).`,
+        `Analyse et gestion des risques.`,
+        `Sensibilisation des équipes.`
+      ],
+      skills:[
+        {k:'Offensif', v:'Pentest, Burp Suite, Metasploit'},
+        {k:'Défensif', v:'SIEM, SOC, EDR'},
+        {k:'Cloud', v:'Sécurité AWS / Azure'},
+        {k:'Normes', v:'ISO 27001, NIS2, RGPD'},
+        {k:'GRC', v:'EBIOS RM, Analyse de risques'}
+      ],
+      xp:`Expert cybersécurité polyvalent (offensif & défensif). Expérience d'audits, de tests d'intrusion et de mise en conformité pour des SI variés.`,
+      fit:`La sécurité n'est plus optionnelle : un profil rare et critique pour protéger vos projets.`
+    },
+    {
+      role:'Architecte Cloud (AWS / Azure)', tjm:'690 €/jour', tag:'Cloud & Infra', acc:'#10b981', icon:IC.cloud,
+      missions:[
+        `Conception d'architectures cloud scalables et sûres.`,
+        `Pilotage des migrations vers le cloud.`,
+        `Optimisation des coûts (FinOps).`,
+        `Sécurisation (IAM, réseau, chiffrement).`,
+        `Mise en place de l'Infrastructure as Code.`,
+        `Accompagnement des équipes techniques.`
+      ],
+      skills:[
+        {k:'Cloud', v:'AWS, Azure, GCP'},
+        {k:'IaC', v:'Terraform, CloudFormation'},
+        {k:'Conteneurs', v:'Kubernetes, Docker'},
+        {k:'Réseau & Sécurité', v:'VPC, IAM, Well-Architected'},
+        {k:'FinOps', v:'Optimisation des coûts'}
+      ],
+      xp:`Architecte cloud spécialisé dans la conception et la migration d'infrastructures modernes. Expérience multi-cloud et optimisation de la scalabilité et des coûts.`,
+      fit:`Il pilote votre migration et votre scalabilité cloud — un rôle stratégique et très recherché.`
+    },
+    {
+      role:'Développeur Backend (Java / Spring)', tjm:'550 €/jour', tag:'Backend Java', acc:'#f59e0b', icon:IC.server,
+      missions:[
+        `Développement de microservices et d'APIs robustes.`,
+        `Conception d'architectures back-end scalables.`,
+        `Optimisation des performances et de la fiabilité.`,
+        `Tests unitaires et d'intégration.`,
+        `Intégration continue et déploiement.`,
+        `Collaboration en équipe agile.`
+      ],
+      skills:[
+        {k:'Java', v:'Java 21, Spring Boot, Hibernate'},
+        {k:'Architecture', v:'Microservices, REST, Kafka'},
+        {k:'Data', v:'PostgreSQL, Redis'},
+        {k:'DevOps', v:'Docker, Kubernetes, CI/CD'},
+        {k:'Tests', v:'JUnit, Mockito'}
+      ],
+      xp:`Développeur back-end spécialisé Java / Spring, orienté qualité et performance. Expérience sur des architectures microservices en production à forte charge.`,
+      fit:`Un backend robuste et éprouvé : le socle fiable dont dépendent vos applications critiques.`
+    },
+    {
+      role:'Consultant SAP S/4HANA', tjm:'780 €/jour', tag:'SAP S/4HANA', acc:'#4f46e5', icon:IC.sap,
+      missions:[
+        `Déploiement et paramétrage de SAP S/4HANA.`,
+        `Pilotage des migrations ECC vers S/4HANA.`,
+        `Recueil des besoins métiers et conception fonctionnelle.`,
+        `Intégration des modules (FI/CO, MM, SD).`,
+        `Optimisation des processus Finance et Supply Chain.`,
+        `Support fonctionnel et accompagnement des utilisateurs.`
+      ],
+      skills:[
+        {k:'SAP', v:'SAP S/4HANA, Fiori, SAP BTP'},
+        {k:'Modules', v:'FI/CO, MM, SD'},
+        {k:'Data', v:'SAP Analytics Cloud, CDS Views, SQL'},
+        {k:'Migration', v:'ECC → S/4HANA, SAP Activate'},
+        {k:'Méthodes', v:'Agile, ITIL'}
+      ],
+      xp:`Consultant SAP spécialisé dans les programmes S/4HANA et la transformation des processus Finance et Supply Chain. Expérience de migrations et de déploiements internationaux au sein de grands groupes.`,
+      fit:`SAP reste la colonne vertébrale des grands SI : un consultant S/4HANA expérimenté est rare et stratégique pour vos programmes de transformation.`
+    }
+  ];
+
+  const N = PROFILES.length;
+  const personSVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-4 0-8 2-8 5v1h16v-1c0-3-4-5-8-5Z"/></svg>';
+  const checkSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+  const pad = n => (n<10?'0':'')+n;
+  const chipsFrom = (str,max) => { let a=str.split(',').map(t=>t.trim()); if(max) a=a.slice(0,max); return a.map(t=>`<span class="chip">${t}</span>`).join(''); };
+  let current = 0;
+
+  function buildHero(){ let h=''; for(let i=0;i<N;i++) h+=`<div class="mini" title="${PROFILES[i].role}" onclick="show('problem')">${personSVG}</div>`; document.getElementById('heroCards').innerHTML=h; }
+  function buildGrid(){
+    let h='';
+    for(let i=0;i<N;i++){ const p=PROFILES[i];
+      h+=`<div class="card" style="--acc:${p.acc}" onclick="openProfile(${i})" onmousemove="tilt(event,this)" onmouseleave="untilt(this)">
+        <div class="glow"></div><span class="num">${pad(i+1)}</span>
+        <div class="stage"><div class="beam"></div><div class="card-floor"></div><div class="card-icon">${p.icon}</div>
+          <div class="tjm-chip">${p.tjm}</div><div class="tagchip">${p.tag}</div></div>
+        <h3>${p.role}</h3><div class="chips">${chipsFrom(p.skills[0].v,3)}</div>
+        <div class="enter-hint">Voir le profil →</div></div>`;
+    }
+    document.getElementById('grid').innerHTML=h;
+  }
+  function tilt(e,el){ const r=el.getBoundingClientRect(); const x=(e.clientX-r.left)/r.width, y=(e.clientY-r.top)/r.height;
+    el.style.transform=`rotateY(${(x-.5)*8}deg) rotateX(${(.5-y)*8}deg) translateY(-6px)`;
+    el.style.setProperty('--mx',(x*100)+'%'); el.style.setProperty('--my',(y*100)+'%'); }
+  function untilt(el){ el.style.transform=''; }
+
+  const SCREENS=['welcome','problem','solution','roster','profile','closing'];
+  const PROG=[0,1,1,2,2,3];
+  function show(name){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById('s-'+name).classList.add('active');
+    const idx=SCREENS.indexOf(name);
+    document.querySelectorAll('#prog i').forEach((d,k)=>d.classList.toggle('on', k<=PROG[idx]));
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function openProfile(i){
+    current=i; const p=PROFILES[i];
+    document.documentElement.style.setProperty('--acc',p.acc);
+    document.getElementById('s-profile').style.setProperty('--acc',p.acc);
+    document.getElementById('pnum').textContent=pad(i+1);
+    document.getElementById('ptag').textContent=p.tag;
+    document.getElementById('ptjm').textContent=p.tjm;
+    document.getElementById('prole').textContent=p.role;
+    document.getElementById('picon').innerHTML=p.icon;
+    document.getElementById('missions').innerHTML=p.missions.map(m=>`<li><span class="ck">${checkSVG}</span><span>${m}</span></li>`).join('');
+    document.getElementById('skills').innerHTML=p.skills.map(c=>`<div class="skillcat"><span class="sk-k">${c.k}</span><div class="chips">${chipsFrom(c.v)}</div></div>`).join('');
+    document.getElementById('xp').textContent=p.xp;
+    document.getElementById('fit').innerHTML=`<b>Un profil très demandé.</b> ${p.fit}`;
+    show('profile');
+  }
+  function stepProfile(dir){ openProfile((current+dir+N)%N); }
+  let tt;
+  function toast(t,s){ clearTimeout(tt); document.getElementById('toast-t').textContent=t; document.getElementById('toast-s').textContent=s||'';
+    const el=document.getElementById('toast'); el.classList.add('show'); tt=setTimeout(()=>el.classList.remove('show'),3200); }
+  document.addEventListener('keydown',e=>{ if(document.getElementById('s-profile').classList.contains('active')){
+    if(e.key==='ArrowRight') stepProfile(1); if(e.key==='ArrowLeft') stepProfile(-1); if(e.key==='Escape') show('roster'); } });
+  buildHero(); buildGrid();
+</script>
+</body>
+</html>
